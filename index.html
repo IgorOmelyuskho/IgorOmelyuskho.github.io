@@ -1,33 +1,90 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Главная</title>
   <link rel="stylesheet" href="styles.css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YRRPFXSYFL"></script>
-    <script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YRRPFXSYFL"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-YRRPFXSYFL');
-    </script>
+  </script>
 </head>
+
 <body>
-  <!-- Включение общего хедера -->
-  <header>
-    <nav>
-      <ul>
-        <li><a href="index.html">Главная</a></li>
-        <li><a href="about.html">О нас</a></li>
-        <li><a href="contact.html">Контакты</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <h1>Добро пожаловать на наш сайт!</h1>
-    <p>Это главная страница вашего сайта.</p>
-  </main>
+<!-- Включение общего хедера -->
+<header>
+  <nav>
+    <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="about.html">О нас</a></li>
+      <li><a href="contact.html">Контакты</a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <h1>Добро пожаловать на наш сайт!</h1>
+  <p>Это главная страница вашего сайта.</p>
+  <button id="myButton">Нажми меня</button>
+  <form id="myForm">
+    <input type="text" placeholder="Ваше имя" required name="you_name">
+    <input type="submit" value="Отправить">
+  </form>
+  <a href="https://www.example.com" target="_blank">Перейти на Example.com</a>
+</main>
+<script>
+  $(document).ready(function () {
+    // Убедитесь, что Google Analytics уже подключен
+
+    // Обработчик клика на кнопку
+    document.getElementById('myButton').addEventListener('click', function () {
+      console.log('myButton clicked!');
+      // Отправка события в Google Analytics
+      gtag('event', 'click', {
+        'event_category': 'button',
+        'event_label': 'myButton',
+        'value': 'some data for click on btn #myButton'
+      });
+    });
+
+
+    // Обработчик для отправки формы
+    $('#myForm').submit(function (event) {
+      event.preventDefault();  // Предотвращаем стандартное поведение формы
+
+      // Сериализуем данные формы
+      var formData = $(this).serialize();
+
+      // Отправка данных через AJAX
+      $.ajax({
+        url: 'https://httpbin.org/post',  // URL для отправки данных (httpbin)
+        method: 'POST',                 // Метод отправки данных
+        data: formData,                 // Данные формы
+        success: function (response) {
+          // Обработка успешного ответа
+          console.log('Форма успешно отправлена!');
+          console.log(response);  // Ответ от httpbin, включает отправленные данные
+          // Отправка события в Google Analytics
+          gtag('event', 'submit', {
+            'event_category': 'form',
+            'event_label': 'myForm',
+            'value': 'some data for submit form #myForm'
+          });
+        },
+        error: function (xhr, status, error) {
+          // Обработка ошибки
+          console.error('Ошибка отправки формы:', error);
+        }
+      });
+    });
+  });
+</script>
 </body>
+
 </html>
